@@ -1,0 +1,246 @@
+
+  /* Uygulama konteyneri ayarları */
+  .app-container {
+    display: flex;
+    justify-content: center; /* Yatayda ortala */
+    align-items: center; /* Dikeyde ortala */
+    flex-direction: column; /* Dikey yönlendirme */
+    height: 100vh; /* Tüm görünüm yüksekliği */
+  }
+
+  
+  
+  /* Başlık */
+  .title {
+    font-size: 2.4rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  /* Input Bölümü */
+  .input-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* İçerikleri ortala */
+    margin-bottom: 20px;
+  }
+  
+  .input-field {
+    width: 600px;
+    max-width: 600px; /* Maksimum genişlik ekleyerek daha iyi görünüm elde et */
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .submit-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button.loading {
+    background-color: #0056b3;
+  }
+  
+  .submit-button:disabled {
+    background-color: #b3d7ff;
+    cursor: not-allowed;
+  }
+  
+  .error-message {
+    color: #ff4d4d;
+    font-size: 0.9rem;
+    margin-top: 10px;
+  }
+  
+  /* Loading Spinner */
+  .loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .spinner-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .circle {
+    opacity: 0.25;
+    stroke: currentColor;
+  }
+  
+  .path {
+    opacity: 0.75;
+    fill: currentColor;
+  }
+  
+  /* Film Kartları */
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .movie-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .image-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  .movie-poster {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .no-poster {
+    font-size: 0.9rem;
+    color: #888;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  /* Film Bilgileri */
+  .movie-info {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .movie-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .rating-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .rating {
+    display: flex;
+    align-items: center;
+    color: #ffa500;
+  }
+  
+  .rating-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+  
+  .rating-value {
+    font-size: 0.9rem;
+  }
+  
+  /* Detay Butonu */
+  .detail-button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .detail-button:hover {
+    background-color: #218838;
+  }
+  
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Modal için detaylar */
+  .modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+  
+  .modal-description {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+  
+  .close-button {
+    background-color: #ff6666;
+    color: #fff;
+    padding: 0.5rem 1.2rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .close-button:hover {
+    background-color: #ff4d4d;
+  }
+  
+  /* Hata mesajı */
+  .error-message {
+    color: #ff4d4d;
+    font-weight: bold;
+    margin-top: 1rem;
+  }
+  
+  /* Yükleniyor spinner */
+  .loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .spinner-icon {
+    width: 20px;
+    height: 20px;
+  }
+  

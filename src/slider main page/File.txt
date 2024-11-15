@@ -1,0 +1,32 @@
+Remix Icon
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
+
+Slider Content
+
+Racing
+Racing is the ultimate test of speed and skill, where adrenaline
+surges, engines roar, and competitors push the limits, chasing
+victory with every heartbeat and turn of the track.
+
+Porche
+Porsche is the epitome of luxury and performance, blending iconic
+design with precision engineering to create a thrilling, timeless
+driving experience.
+
+Team
+Cars are more than transportation; they're a symbol of freedom,
+innovation, and style, shaping journeys and connecting people
+through design, performance, and engineering excellence.
+
+Action
+Car action is adrenaline-fueled excitement, where speed meets
+precision. High-octane chases, tight turns, and daring stunts push
+both machines and drivers to their limits.
+
+3 2 1 Go
+"3, 2, 1, Go!" signals the start of an electrifying moment.
+Engines roar, hearts race, and the thrill of competition ignites,
+launching the action.
+
+Google fonts
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Poppins:wght@400;500;600;700;800;900&display=swap');
