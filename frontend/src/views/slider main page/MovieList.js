@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useTheme } from "../../context/ThemeContext";
-import './Slider.css';
-import { useAuth0 } from "@auth0/auth0-react";
+import '../../index.css';
+import { useAuth0 } from "@auth0/auth0-react";import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons'; // Dolgun kalp
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons'; // Boş kalp
+
 
 const MovieList = ({ selectedGenreId }) => {
   const [movies, setMovies] = useState([]);
@@ -154,16 +157,22 @@ const MovieList = ({ selectedGenreId }) => {
               alt={movie.title}
               onClick={() => handlePosterClick(movie.title)}
             />
+            <div className='ttl-btn'>
             <h2 className={`${theme === 'dark' ? 'text-light' : 'text-dark'}`}>{movie.title}</h2>
             {/* Beğen Butonu */}
             {isAuthenticated && (
               <button 
-                className={`like_b ${likedMovies[movie.id] ? 'liked' : 'unliked'}`} 
+                className="like-button"
                 onClick={() => handleLike(movie.id)}
               >
-                {likedMovies[movie.id] ? 'Beğenildi' : 'Beğen'}
+                <FontAwesomeIcon 
+                  icon={likedMovies[movie.id] ? solidHeart : regularHeart} 
+                  style={{ color: likedMovies[movie.id] ? 'red' : 'gray', fontSize: '1.5rem' }}
+                />
               </button>
+
             )}
+            </div>
           </div>
         ))}
       </div>

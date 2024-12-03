@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import "../assets/MovieDetail.css";
 
 const MovieDetail = () => {
   const { title } = useParams(); // URL'den başlığı al

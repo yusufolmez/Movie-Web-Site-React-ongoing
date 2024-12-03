@@ -17,7 +17,7 @@ function FilmOnerileri() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:5000/film-onerisi/', {
+      const response = await fetch('http://localhost:8080/film-onerisi/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

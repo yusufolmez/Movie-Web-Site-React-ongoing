@@ -1,14 +1,344 @@
+/* Genel stil ayarları */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #0E1826; /* Koyu sofistike arka plan */
+  color: #eee; /* Yazı rengi */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+/* Google Fonts import */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Poppins:wght@400;500;600;700;800;900&display=swap');
+
+/* Slider */
+.slider {
+  font-family: "Poppins", sans-serif;
+  background-color: #010101;
+  color: #eee;
+  height: 93vh;
+  margin: 0 70px;
+  position: relative;
+}
+
+.item {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: .5s;
+}
+
+.item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item::after {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background-image: linear-gradient(to top, #000 10%, transparent);
+}
+
+.item .content {
+  position: absolute;
+  left: 10%;
+  top: 20%;
+  width: 500px;
+  max-width: 80%;
+  z-index: 1;
+}
+
+.item .content p:nth-child(1) {
+  text-transform: uppercase;
+  letter-spacing: 10px;
+}
+
+.item .content h2 {
+  font-size: 100px;
+  margin: 0;
+}
+
+.item.active {
+  opacity: 1;
+  z-index: 10;
+}
+
+@keyframes showContent {
+  to {
+    transform: translateY(0);
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+.item.active p:nth-child(1),
+.item.active h2,
+.item.active p:nth-child(3) {
+  transform: translateY(30px);
+  filter: blur(20px);
+  opacity: 0;
+  animation: showContent .4s .6s ease-in-out forwards;
+}
+
+.item.active h2 {
+  animation-delay: 1s;
+}
+
+.item.active p:nth-child(3) {
+  animation-delay: 1.3s;
+}
+
+/* Arrows */
+.arrows {
+  position: absolute;
+  top: 30%;
+  right: 50px;
+  z-index: 100;
+}
+
+.arrows button {
+  background-color: #eee5;
+  border: none;
+  font-family: monospace;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  font-size: x-large;
+  color: #eee;
+  transition: .2s ease-in;
+}
+
+.arrows button:hover {
+  background-color: #0476D9; /* Canlı mavi buton hover */
+  color: black;
+}
+
+/* Thumbnail */
+.thumbnail {
+  position: absolute;
+  bottom: 50px;
+  z-index: 11;
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  height: 250px;
+  padding: 0 50px;
+  box-sizing: border-box;
+  overflow: auto;
+  justify-content: center;
+}
+
+.thumbnail::-webkit-scrollbar {
+  width: 0;
+}
+
+.slide {
+  height: 220px;
+  transition: .5s;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.slide:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.slide.active {
+  width: 150px;
+}
+
+.slide:not(.active) {
+  width: 100px;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  filter: brightness(0.5);
+}
+
+.slide.active img {
+  filter: brightness(1.5);
+}
+
+.slide .content {
+  position: absolute;
+  inset: auto 10px 10px 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.slide .content:hover {
+  color: #ffd700;
+  transform: scale(1.05);
+}
+
+/* Poster */
+.movie-posters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 20px 85px;
+}
+
+.movie-posters div {
+  margin: 15px;
+  text-align: center;
+  width: 275px;
+  transition: transform 0.3s;
+}
+
+.movie-posters div:hover {
+  transform: scale(1.05);
+}
+
+.movie-posters img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.movie-posters h2 {
+  font-size: 16px;
+  margin-top: 10px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #0476D9; /* Canlı mavi buton */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 0 5px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.pagination button:hover {
+  background-color: #034C8C; /* Derin mavi hover */
+  transform: scale(1.05);
+}
+
+.pagination button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 16px;
+  margin: 0 10px;
+  color: #333;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Like Button */
+.ttl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px 0 0;
+}
+
+.like-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.like-button:focus {
+  outline: none;
+}
+
+/* Movie Detail */
+.movie-detail {
+  max-width: 800px; /* Maksimum genişlik */
+  margin: 20px auto; /* Ortalanmış görünüm */
+  padding: 20px;
+  background-color: #1a1a1a; /* Koyu arka plan */
+  border-radius: 8px; /* Kenar yuvarlama */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+}
+
+.movie-detail h1 {
+  font-size: 2.5rem; /* Başlık boyutu */
+  margin-bottom: 20px; /* Alt boşluk */
+  color: #fff; /* Beyaz başlık rengi */
+  text-align: center; /* Ortalı metin */
+}
+
+.movie-detail img {
+  width: 35%; /* Resim genişliği %100 */
+  border-radius: 8px; /* Kenar yuvarlama */
+  margin-bottom: 20px; /* Alt boşluk */
+}
+
+.movie-detail p {
+  font-size: 1.2rem; /* Metin boyutu */
+  line-height: 1.6; /* Satır yüksekliği */
+  color: #ddd; /* Açık gri metin rengi */
+  margin-bottom: 15px; /* Alt boşluk */
+}
+
+/* Mobil uyumlu tasarım için medya sorgusu */
+@media (max-width: 600px) {
+  .movie-detail {
+    padding: 15px; /* Daha küçük boşluklar */
+  }
+
+  .movie-detail h1 {
+    font-size: 2rem; /* Daha küçük başlık boyutu */
+    color: #0E1826;
+  }
+
+  .movie-detail p {
+    font-size: 1rem; /* Daha küçük metin boyutu */
+  }
+}
+
+/* Responsive Tasarım */
+@media screen and (max-width: 1200px) {
+  .slider {
+    margin: 0 20px;
+  }
+
+  .item .content {
+    width: 80%;
+  }
+
+  .movie-posters {
+    margin: 20px 20px;
+  }
+
+  .movie-posters div {
+    width: 250px;
+  }
 }

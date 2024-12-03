@@ -1,29 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { NavLink as RouterNavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import './Navbar.css';
-import {
-  Collapse,
-  Container,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  Button,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  InputGroup,
-  Input,
-  InputGroupText,
-} from "reactstrap";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from 'axios';
 import { useAuth0 } from "@auth0/auth0-react";
 import { useTheme } from "../context/ThemeContext";
-import axios from 'axios';
+import './Navbar.css';
+import '../index.css';
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,8 +12,19 @@ const NavBar = () => {
   const [movies, setMovies] = useState([]); // Arama sonuçları
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const { theme, toggleTheme } = useTheme();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const location = useLocation();
   
+  // URL parametrelerini kontrol et ve arama terimini ayarla
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const query = params.get('q');
+    if (query) {
+      setSearchQuery(query);
+      searchMovies(query); // Eğer query varsa, arama işlemini yap
+    }
+  }, [location]);
+
   const toggle = () => setIsOpen(!isOpen);
 
   const logoutWithRedirect = () =>
@@ -42,18 +34,23 @@ const NavBar = () => {
       }
     });
 
-  const showSearchResults = () => {
-    const body = document.querySelector('body');
-    body.classList.add('no-scroll'); // Kaydırmayı devre dışı bırak
-    document.querySelector('.search-results').classList.remove('empty');
-  };
+    const showSearchResults = () => {
+      const body = document.querySelector('body');
+      body.classList.add('no-scroll'); // Kaydırmayı devre dışı bırak
+      const searchResults = document.querySelector('.search-results');
+      searchResults.classList.remove('empty');
+      searchResults.style.display = 'block'; // Arama sonuçlarını görünür yap
+    };
     
-  const hideSearchResults = () => {
-    const body = document.querySelector('body');
-    body.classList.remove('no-scroll'); // Kaydırmayı yeniden etkinleştir
-    document.querySelector('.search-results').classList.add('empty');
-    setMovies([]); // Arama sonuçlarını sıfırla
-  };
+    const hideSearchResults = () => {
+      const body = document.querySelector('body');
+      body.classList.remove('no-scroll'); // Kaydırmayı yeniden etkinleştir
+      const searchResults = document.querySelector('.search-results');
+      searchResults.classList.add('empty');
+      searchResults.style.display = 'none'; // Arama sonuçlarını gizle
+      setMovies([]); // Arama sonuçlarını sıfırla
+    };
+    
 
   // Arama işlemi için API çağrısı
   const searchMovies = async (query) => {
@@ -87,11 +84,14 @@ const NavBar = () => {
   const handleSearchInputChange = (event) => {
     const value = event.target.value;
     setSearchQuery(value);
-  
-    if (!value) {
-      hideSearchResults(); // Arama sorgusu boşsa sonuçları gizle
+    
+    if (value) {
+      // URL'yi güncelle ve arama yap
+      navigate(`/search?q=${value}`);
     } else {
-      searchMovies(value); // Arama sorgusu doluysa API çağrısı yap
+      hideSearchResults(); // Arama sorgusu boşsa sonuçları gizle
+      // URL'deki arama parametresini kaldır
+      navigate('/');
     }
   };
 
@@ -101,19 +101,24 @@ const NavBar = () => {
     window.location.reload();
   };
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);  // Menü açma/kapama
+  };
+
   return (
     <div>
       {/* Arama sonuçları */}
       {movies.length > 0 && (
-        <div className={`search-results ${theme === 'dark' ? 'dark-theme' : 'light-theme'}`}>
-          <ul className="movie-list">
+        <div className={`search-results`}>
+          <ul className="movie-poster">
             {movies.map((movie) => (
               <li key={movie.id} className="movie-item">
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
                   className="movie-poster"
-                  onClick={() => handlePosterClick(movie.title)} // Poster'a tıklandığında yönlendirme yapıyoruz
+                  onClick={() => handlePosterClick(movie.title)}
                 />
                 <span>{movie.title}</span>
               </li>
@@ -121,125 +126,75 @@ const NavBar = () => {
           </ul>
         </div>
       )}
-      
-      <Navbar className={`nav-container ${theme === 'dark' ? 'bg-dark' : 'bg-light'}`} light expand="md" container={false}>
-        <NavbarBrand className="logo" />
-        <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
-          <Nav navbar>
-            <NavItem>
-              <NavLink
-                tag={RouterNavLink}
-                to="/"
-                exact
-                activeClassName="router-link-exact-active"
-              >
-                Anasayfa
-              </NavLink>
-            </NavItem>
-            {isAuthenticated && (
-              <NavItem>
-                <NavLink
-                  tag={RouterNavLink}
-                  to="/external-api"
-                  exact
-                  activeClassName="router-link-exact-active"
-                >
-                  Dış API
-                </NavLink>
-              </NavItem>
-            )}
-            <NavItem>
-              <NavLink
-                tag={RouterNavLink}
-                to="/FilmOnerileri"
-                exact
-                activeClassName="router-link-exact-active"
-              >
-                Film Önerisi
-              </NavLink>
-            </NavItem>
-          </Nav>
-        </Collapse>
-
-        <Nav>
-          <NavItem>
-            <InputGroup>
-              <InputGroupText>
-                <FontAwesomeIcon icon="search" />
-              </InputGroupText>
-              <Input
-                type="text"
-                placeholder="Ara..."
-                aria-label="Arama"
-                value={searchQuery}
-                onChange={handleSearchInputChange} // Arama çubuğundaki metni yakalayarak arama yapar
-              />
-            </InputGroup>
-          </NavItem>
-
-          {isAuthenticated && (
-            <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret id="profileDropDown">
-                <img
-                  src={user.picture}
-                  alt="Profil"
-                  className="nav-user-profile rounded-circle"
-                  width="50"
-                />
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem header>{user.name}</DropdownItem>
-                <DropdownItem
-                  tag={RouterNavLink}
-                  to="/profile"
-                  className="dropdown-profile"
-                  activeClassName="router-link-exact-active"
-                >
-                  <FontAwesomeIcon icon="user" className="mr-3" /> Profil
-                </DropdownItem>
-                <DropdownItem
-                  id="qsLogoutBtn"
-                  onClick={() => logoutWithRedirect()}
-                >
-                  <FontAwesomeIcon icon="power-off" className="mr-3" /> Çıkış Yap
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
-          )}
-        </Nav>
-
-        <Nav className="ml-auto" navbar>
-          <NavItem>
-            <Button
-              className={`theme-switcher ${theme === 'dark' ? 'dark' : 'light'}`}
-              onClick={toggleTheme}
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-            >
-              {theme === 'dark' ? 'Light' : 'Dark'}
-            </Button>
-          </NavItem>
-          {!isAuthenticated && (
-            <NavItem>
-              <Button
-                id="qsLoginBtn"
-                color="primary"
-                className="btn-margin"
-                onClick={() => loginWithRedirect()}
-              >
-                Giriş Yap
-              </Button>
-            </NavItem>
-          )}
-        </Nav>
-      </Navbar>
-
-      {/* Ana Sayfa İçeriğini Arama Sırasında Gizle */}
-      {!searchQuery && (
-        <div className="home-content">
-          {/* Burada ana sayfa içeriğinizi ekleyebilirsiniz */}
+  
+      {/* Navbar */}
+      <nav className={`nav-container`}>
+        <div className="navbar-header">
+          <div className="logo1"></div>
+          
+          <button className="navbar-toggler" onClick={toggle}>
+            ☰
+          </button>
         </div>
-      )}
+        <div className={`navbar-collapse ${isOpen ? 'open' : ''}`}>
+          <ul className="nav-links">
+            <li>
+              <a href="/" className="nav-link">
+                Anasayfa
+              </a>
+            </li>
+            {isAuthenticated && (
+              <li>
+                <a href="/external-api" className="nav-link">
+                  Dış API
+                </a>
+              </li>
+            )}
+            <li>
+              <a href="/PicksForUser" className="nav-link">
+                Our Picks For You
+              </a>
+            </li>
+            <li>
+              <a href="/FilmOnerileri" className="nav-link">
+                Film Önerisi
+              </a>
+            </li>
+          </ul>
+        </div>
+  
+        {/* Arama Çubuğu */}
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Ara..."
+            value={searchQuery}
+            onChange={handleSearchInputChange}
+          />
+        </div>
+  
+        {/* Kullanıcı Menü */}
+        {isAuthenticated && (
+          <div className="user-menu">
+            <img
+              src={user.picture}
+              alt="Profil"
+              className="nav-user-profile"
+              onClick={toggleMenu}  // Tıklama ile menüyü açıyoruz
+            />
+            <div className="dropdown-arrow" onClick={toggleMenu}>
+              <i className="fa-light fa-caret-down"></i> {/* FontAwesome ok simgesi */}
+            </div>
+            <div className={`dropdown-menu ${isMenuOpen ? 'open' : ''}`}>
+              <p>{user.name}</p>
+              <a href="/profile" className="dropdown-link">Profil</a>
+              <button onClick={() => logoutWithRedirect()} className="dropdown-link">
+                Çıkış Yap
+              </button>
+            </div>
+          </div>
+        )}
+      </nav>
     </div>
   );
 };

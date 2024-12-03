@@ -1,226 +1,292 @@
+/* Navbar Ana Yapı */
 .nav-container {
-  padding: 0rem 0rem !important;
-  width: 100% !important;
-  max-width: 100%;
-  padding-top: 10px;
-  display: grid;
-  grid-template-columns: 480px 640px 320px 380px;
-  grid-template-rows: 50px;
-  justify-items: center;
-  align-items: center;
-  position: relative;
-  z-index: 100;
-}
-
-.navbar-brand {
-  font-size: 1.5rem; /* Logo font boyutunu ayarlayabilirsiniz */
-}
-.nav-item {
   display: flex;
   align-items: center;
-  justify-items: center;
-  height: 100%;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background-color: #0E1826;  /* Koyu zemin */
+  color: white;
+  border-bottom: none;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+/* Navbar Başlık ve Logo */
+.navbar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo1 {
+  font-size: 1.5rem;
+  color: #05AFF2;  /* Canlı mavi logo rengi */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Navbar Toggler (Mobil Cihazlar) */
+.navbar-toggler {
+  display: none;
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Navbar Linkler */
+.navbar-collapse {
+  display: flex;
+  flex-basis: auto;
+  flex-grow: 1;
+  justify-content: center;  /* Linkleri ortalamak için eklendi */
+  align-items: center;
+}
+
+.navbar-collapse.open {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin: 0 0.5rem;
 }
 
 .nav-link {
-  padding: 0.5rem 1rem !important; /* NavLink'lerin padding'ini ayarlamak için */
-  margin-right: 0 !important;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.3s ease;
 }
 
-.theme-switcher {
-  margin-left: 0.5rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+.nav-link:hover {
+  background-color: #0476D9;  /* Canlı mavi hover rengi */
+  color: #0E1826;
 }
 
-.btn-margin {
-  margin-left: 0.5rem;
+/* Arama Çubuğu */
+.search-bar {
+  margin-left: 1rem;
+}
+
+.search-bar input {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  width: 200px;
+}
+
+/* Kullanıcı Menüsü */
+.user-menu {
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
 .nav-user-profile {
-  height: 40px; /* Profil resminin yüksekliğini ayarlama */
-  width: 40px; /* Profil resminin genişliğini ayarlama */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  cursor: pointer;
 }
 
-
-/* Tema değiştirici için yeni stiller */
-.theme-switcher {
-    background-color: transparent;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    margin-right: 1rem;
-  }
-  
-/* Light theme (default) */
-:root {
-    --background-color: #ffffff;
-    --text-color: #333333;
-  }
-  
-  /* Dark theme */
-  [data-theme='dark'] {
-    --background-color: #343a40;
-    --text-color: #ffffff;
-  }
-  
-  body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    transition: background-color 0.3s, color 0.3s;
-  }
-  
-  .bg-light {
-    background-color: var(--background-color);
-  }
-  
-  .bg-dark {
-    background-color: var(--text-color);
-  }
-  
-  .text-light {
-    color: #ffffff;
-  }
-  
-  .text-dark {
-    color: #010101;
-  }
-  
-  /* Footer styles */
-  footer {
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    padding: 10px 0;
-  }
-  
-  footer a {
-    color: inherit;
-    text-decoration: underline;
-  }
-
-
-  /* button */
-
-/* Theme Switcher Button Styles */
-.theme-switcher {
-  background-color: transparent; /* Keep the button background transparent */
-  border: none; /* Remove default button border */
-  cursor: pointer; /* Change cursor to pointer */
-  padding: 0.25rem 0.5rem; /* Reduced padding for smaller button */
-  font-size: 1rem; /* Smaller font size */
-  display: flex; /* Use flexbox for alignment */
-  align-items: center; /* Center items vertically */
-  transition: color 0.3s; /* Smooth color transition */
-}
-
-.theme-switcher.light {
-  color: #333; /* Dark text for light theme */
-}
-
-.theme-switcher.dark {
-  color: #fff; /* Light text for dark theme */
-}
-
-/* Adding a smaller background for visual cues */
-.theme-switcher:before {
-  content: '';
-  display: inline-block;
-  width: 16px; /* Adjust width for smaller icon */
-  height: 16px; /* Adjust height for smaller icon */
-  margin-right: 0.5rem; /* Space between icon and text */
-  border-radius: 50%; /* Make it circular */
-  transition: background-color 0.3s; /* Smooth background transition */
-}
-
-/* Light theme icon */
-.theme-switcher.light:before {
-  background-color: #ffd700; /* Gold color for light theme */
-}
-
-/* Dark theme icon */
-.theme-switcher.dark:before {
-  background-color: #555; /* Darker gray for dark theme */
-}
-
-
-
-.input-group {
-  display: flex;
-  align-items: end;
-  max-width: 300px; /* Arama kutusunun genişliğini sınırlamak */
-  padding: 5px 10px !important;
-}
-
-.input-group-text {
-  background-color: transparent;
-  border: none;
-}
-
-.input {
-  border-radius: 20px; /* Yumuşak kenarlara sahip input */
-  border: 1px solid black;
-  padding: 5px 10px !important;
-}
-
-
-
-
-body.no-scroll {
-  overflow: hidden; /* Kaydırmayı tamamen devre dışı bırak */
-}
-
-
-
-/* Search results container - Sayfa üzerinde her şeyin üstünde olacak */
-.search-results {
-  position: fixed; /* Sayfanın her yerinde sabit kalacak */
-  top: 0px;
-  left: 0;
+/* FontAwesome Ok İkonu */
+.dropdown-arrow {
+  position: absolute;
   right: 0;
   bottom: 0;
-  z-index: 99; /* Arama sonuçları tüm içerikten üstte olacak */
-  padding: 20px;
-  display: flex;
-  flex-wrap: wrap; /* Posterleri birden fazla satıra yerleştir */
-  justify-content: space-evenly; /* Posterler arasında eşit mesafe bırak */
-  gap: 15px;
-  overflow-y: auto; /* İçerik taşarsa kaydırma çubuğu ekle */
+  font-size: 16px;
+  cursor: pointer;
+  color: white;
 }
 
-/* Light tema için arka plan ve yazı rengi */
-.search-results.light-theme {
-  background-color: rgba(255, 255, 255, 255); /* Beyaz arka plan */
-  color: black; /* Siyah metin */
+/* Dropdown Menü */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #495057;
+  color: white;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  text-align: left;
+  min-width: 150px;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  width: auto; /* Genişliği içeriğe göre ayarla */
+  max-width: 100vw;  /* Sayfa sınırlarını aşmasını engelle */
+  overflow-x: hidden;  /* Taşmayı engeller */
+  box-sizing: border-box;  /* İçeriğin kutusunu sınırlandırır */
 }
 
-/* Dark tema için arka plan ve yazı rengi */
-.search-results.dark-theme {
-  background-color: rgb(52, 58, 64); /* Siyah arka plan */
-  color: white; /* Beyaz metin */
+/* Menü açıldığında */
+.dropdown-menu.open {
+  display: block;
+  opacity: 1;
+  left: auto; /* Sağdan açılmasını sağlar */
+  right: 0;
+}
+
+/* Dropdown Öğeleri */
+.dropdown-link {
+  display: block;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 0;
+}
+
+.dropdown-link:hover {
+  background-color: #343a40; /* Koyu arka plan hover rengi */
+}
+
+.search-results {
+  position: absolute;
+  top: 60px; /* Navbar'ın hemen altına yerleştirin */
+  left: 0;
+  right: 0;
+  background-color: #0E1826; /* Arama sonuçlarının arka planını belirleyin */
+  margin: 20px 85px;
+  padding: 10px;
+  display: none; /* Varsayılan olarak gizli */
+}
+
+.search-results.empty {
+  display: none; /* Arama sonuçları boşsa gizler */
 }
 
 .search-results ul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 20px 85px 20px 85px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.search-results li {
-  list-style-type: none;
+.search-results .movie-item {
   margin: 15px;
   text-align: center;
-  width: 275px; /* İsterseniz genişliği değiştirebilirsiniz */
-  transition: transform 0.3s; /* Hover efekti için geçiş */
+  width: 245px;
+  max-height: 325px;
+  transition: transform 0.3s;
 }
 
-.search-results li:hover { 
-  transform: scale(1.05); /* Hover durumunda büyütme efekti */
+.search-results .movie-item:hover {
+  transform: scale(1.05);
 }
 
-.search-results li span {
-  font-size: 14px;
-  margin-top: 10px;
+.search-results .movie-poster {
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 325px;
+  gap: 10px;
+}
+
+.search-results .movie-poster img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+
+
+
+/* Tema Değiştirici ve Giriş Butonu */
+.theme-actions {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.theme-switcher {
+  border: none;
+  background-color: #495057;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+.theme-switcher.dark {
+  background-color: #343a40;
+}
+
+.login-button {
+  border: none;
+  background-color: #0476D9;  /* Ana butonlar için canlı mavi */
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #034C8C;  /* Hover için daha koyu mavi */
+}
+
+
+.footer1 {
+  margin-top: auto; /* İçeriğin alt kısmına sabitler */
+  padding: 20px;
+  text-align: center;
+  background-color: #0E1826;
+  min-height: 200px ;
+}
+
+.footer1 a {
+  color: inherit; /* Link rengi, tema ile uyumlu */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.footer1 a:hover {
+  color: #0476d9; /* Canlı mavi hover efekti */
+}
+
+/* Logo stilizasyonu */
+.footer1 .logo {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+
+/* Mobil Cihazlar için Düzen */
+@media (max-width: 768px) {
+  .navbar-toggler {
+    display: block;
+  }
+
+  .navbar-collapse {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .navbar-collapse.open {
+    display: flex;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .nav-links li {
+    margin: 0.5rem 0;
+  }
+
+  .search-bar input {
+    width: 100%;
+  }
 }

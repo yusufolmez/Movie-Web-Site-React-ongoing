@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MovieList from './MovieList'; // MovieList bileşenini içe aktar
-import './Slider.css';
+import '../../index.css';
 
 const Slider = () => {
   const [itemActive, setItemActive] = useState(0);
