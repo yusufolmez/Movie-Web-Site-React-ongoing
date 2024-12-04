@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  max-width: 100%;
 }
 
 body {
@@ -21,14 +22,25 @@ body {
 /* Slider */
 .slider {
   font-family: "Poppins", sans-serif;
-  background-color: #010101;
+  background-color: transparent;
   color: #D3D3D3;
-  height: 100vh;
+  height: 110vh;
+  width: 1903px;
+  top: -120px;
+  position: relative;
+  
+}
+.slider-recommend {
+  font-family: "Poppins", sans-serif;
+  background-color: transparent;
+  color: #D3D3D3;
+  height: 1021px;
   width: 1903px;
   top: -60px;
   position: relative;
   
 }
+
 
 .item {
   position: absolute;
@@ -92,11 +104,11 @@ body {
   transform: translateY(30px);
   filter: blur(20px);
   opacity: 0;
-  animation: showContent .4s .6s ease-in-out forwards;
+  animation: showContent .4s .2s ease-in-out forwards;
 }
 
 .item.active h2 {
-  animation-delay: 1s;
+  animation-delay: 0.5s;
 }
 
 .item.active p:nth-child(3) {
@@ -139,13 +151,72 @@ body {
   height: 250px;
   padding: 0 50px;
   box-sizing: border-box;
-  overflow: auto;
-  justify-content: center;
+  justify-content: center; 
 }
+
+
 
 .thumbnail::-webkit-scrollbar {
   width: 0;
 }
+.thumbnail-recommend {
+  position: absolute;
+  bottom: 50px;
+  z-index: 11;
+  display: flex;
+  width: 100%;
+  height: 250px;
+  padding: 0 0 400px 800px; /* Padding değerini değiştirdik */
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Buton ve input'u dikeyde ortalar */
+  gap: 0; /* Input ile buton arasında boşluk */
+  padding: 70px 40px 0 0;
+  z-index: 999999;
+}
+
+.input-field {
+
+  width: 400px;
+  height: 40px; /* Yükseklik ayarı */
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 8px; /* Padding ekledik */
+  line-height: 24px; /* Yüksekliği düzenlemek için line-height ekledik */
+}
+
+.recommend-button {
+  width: 200px;
+  height: 40px; /* Yükseklik ayarı */
+  font-size: 16px;
+  background-color: transparent;
+  color: white;
+  border: 1px solid #0476D9;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 8px; /* Padding ekledik */
+  line-height: 24px; /* Yüksekliği düzenlemek için line-height ekledik */
+}
+
+.recommend-button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+
 
 .slide {
   height: 220px;
@@ -164,7 +235,7 @@ body {
 }
 
 .slide:not(.active) {
-  width: 50px;
+  width: 70px;
 }
 
 .slide img {

@@ -90,8 +90,8 @@ const MainPage = () => {
 
   // Handle poster click
   const handlePosterClick = (title) => {
-    const formattedTitle = title.replace(/\s+/g, '-');
-    window.open(`/movie/${formattedTitle}`, '_blank');
+    const formattedTitle = encodeURIComponent(title.trim().replace(/\s+/g, '-'));
+    window.open(`/movie/${formattedTitle}`); // Aynı sekmede açmak için '_self' kullanabilirsiniz
   };
 
   // Combined useEffect

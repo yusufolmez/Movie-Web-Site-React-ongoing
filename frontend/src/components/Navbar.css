@@ -67,6 +67,7 @@
   padding: 0.5rem 0.75rem;
   border-radius: 0.25rem;
   transition: background-color 0.3s ease;
+  cursor: pointer;
 }
 
 .nav-link:hover {
@@ -86,6 +87,8 @@
   border-radius: 0.25rem;
   width: 200px;
 }
+
+
 
 /* Kullanıcı Menüsü */
 .user-menu {

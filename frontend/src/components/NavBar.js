@@ -183,7 +183,7 @@ const NavBar = () => {
         <a
           id="qsLoginBtn"
           color="primary"
-          className="btn-margin"
+          className="nav-link"
           onClick={() => loginWithRedirect()}
         >
         Log in

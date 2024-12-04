@@ -1,0 +1,129 @@
+/* Banner'ı en üstte tutmak için */
+.banner {
+    position: relative;    /* Banner'ın üst kısmı için konumlandırma */
+    width: 100%;
+    height: 200px;         /* Banner yüksekliği */
+    background-color: #333;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    text-align: center;
+    z-index: 1;            /* Banner'ın üstte olmasını sağlıyoruz */
+  }
+  
+  /* Sayfa içeriğini navbar'ın altına yerleştir */
+  .profile-container {
+    display: flex;
+    justify-content: center;  /* Yatayda ortalar */
+    align-items: flex-start;  /* Dikeyde, başlangıç noktasına yerleştir */
+    width: 100%;
+    min-height: 100vh;        /* Sayfa içeriği tam ekranı kaplar */
+    margin-top: -100px;       /* Banner yüksekliğini hesaba katmak için negatif margin ekliyoruz */
+    padding: 20px;
+    flex-direction: column;
+    position: relative;      /* İçeriğin üst üste gelmesini engeller */
+    z-index: 2;              /* İçeriklerin banner'dan üstte olmasını sağlıyoruz */
+    align-items: center;     /* İçeriği yatayda ortalar */
+  }
+  
+  /* Profil bölümünü ortalamak için */
+  .profile-main {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;  /* İçeriği yatayda ortalar */
+    width: 100%;
+    max-width: 1200px; /* İçeriği 1200px ile sınırlandırır */
+  }
+  
+  .profile-left {
+    display: flex;
+    flex-direction: column;
+    width: 900px;
+    gap: 20px;
+  }
+  
+  .user-info {
+    display: flex;
+    width: 100%;
+    height: 500px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    gap: 20px;
+    background-color: #0E1826;
+    border-radius: 15px;
+  }
+  
+  .profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .profile-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .user-details h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .user-details p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .user-actions {
+    width: 100%;
+    border: 1px solid #ddd;
+    padding: 20px;
+    height: 500px;
+  }
+  
+  .user-actions h3 {
+    margin-top: 0;
+  }
+  
+  .user-actions ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .user-actions li {
+    margin: 10px 0;
+    font-size: 16px;
+  }
+  
+  .other-users {
+    width: 300px;
+    border: 1px solid #ddd;
+    padding: 20px;
+  }
+  
+  .other-user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .other-user-profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  
+  .other-user-profile p {
+    font-size: 16px;
+    margin: 0;
+  }
+  
