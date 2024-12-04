@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { useAuth0 } from "@auth0/auth0-react";
-import { useTheme } from "../context/ThemeContext";
 import './Navbar.css';
 import '../index.css';
 
@@ -11,7 +10,6 @@ const NavBar = () => {
   const [searchQuery, setSearchQuery] = useState(''); // Arama terimi
   const [movies, setMovies] = useState([]); // Arama sonuçları
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
-  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -82,18 +80,26 @@ const NavBar = () => {
   };
 
   const handleSearchInputChange = (event) => {
-    const value = event.target.value;
+    let value = event.target.value;
+  
+    // Başlangıçtaki boşlukları engellemek için:
+    if (value.startsWith(' ')) {
+      value = value.trimStart(); // Başındaki boşluğu temizle
+    }
+  
     setSearchQuery(value);
-    
+  
     if (value) {
-      // URL'yi güncelle ve arama yap
-      navigate(`/search?q=${value}`);
+      // URL'yi güncellerken boşlukları %20 ile encode ediyoruz
+      const encodedValue = encodeURIComponent(value);
+      navigate(`/search?q=${encodedValue}`);
     } else {
       hideSearchResults(); // Arama sorgusu boşsa sonuçları gizle
-      // URL'deki arama parametresini kaldır
+      // URL'deki arama parametresini kaldırıyoruz, sadece '/' ile gidiyoruz
       navigate('/');
     }
   };
+  
 
   const handlePosterClick = (title) => {
     navigate(`/movie/${title}`);  // Yönlendirmeyi /movie/:id rotasına yapıyoruz
@@ -172,7 +178,18 @@ const NavBar = () => {
             onChange={handleSearchInputChange}
           />
         </div>
-  
+        {!isAuthenticated && (
+        <div>
+        <a
+          id="qsLoginBtn"
+          color="primary"
+          className="btn-margin"
+          onClick={() => loginWithRedirect()}
+        >
+        Log in
+        </a>
+        </div>
+        )}
         {/* Kullanıcı Menü */}
         {isAuthenticated && (
           <div className="user-menu">
@@ -182,15 +199,12 @@ const NavBar = () => {
               className="nav-user-profile"
               onClick={toggleMenu}  // Tıklama ile menüyü açıyoruz
             />
-            <div className="dropdown-arrow" onClick={toggleMenu}>
-              <i className="fa-light fa-caret-down"></i> {/* FontAwesome ok simgesi */}
-            </div>
             <div className={`dropdown-menu ${isMenuOpen ? 'open' : ''}`}>
-              <p>{user.name}</p>
+              <p className="dropdown-link">{user.nickname}</p>
               <a href="/profile" className="dropdown-link">Profil</a>
-              <button onClick={() => logoutWithRedirect()} className="dropdown-link">
+              <a onClick={() => logoutWithRedirect()} className="dropdown-link">
                 Çıkış Yap
-              </button>
+              </a>
             </div>
           </div>
         )}

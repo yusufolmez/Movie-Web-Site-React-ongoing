@@ -1,184 +1,186 @@
-import React, { useState, useEffect } from 'react';
-import Loading from "../../components/Loading";
-import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
-import './styles.css';
 
-const TMDB_API_KEY = '1ac1c652640394393d245daab04c06b2';
+import React, { useState, useEffect } from 'react'; // useEffect burada eklenmeli
 
-function FilmOnerileri() {
-  const { isAuthenticated, logout, user } = useAuth0();
+import axios from 'axios';
+import '../../index.css';
+import { useAuth0 } from "@auth0/auth0-react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
+
+const FilmRecommender = () => {
   const [userInput, setUserInput] = useState('');
   const [recommendations, setRecommendations] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [error, setError] = useState('');
+  const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const userSub = user?.sub;
+  const [likedMovies, setLikedMovies] = useState({});
+  const apiKey = '1ac1c652640394393d245daab04c06b2';  // TMDb API key from environment variables
+
+  const handleInputChange = (e) => {
+    setUserInput(e.target.value);
+  };
 
   const getRecommendations = async () => {
-    setLoading(true);
-    setError(null);
+    if (!userInput.trim()) {
+      setError('Please enter a valid input.');
+      return;
+    }
+    setError('');
     try {
-      const response = await fetch('http://localhost:8080/film-onerisi/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ kullanici_girisi: userInput, oneri_sayisi: 5 }),
+      const response = await axios.post('http://localhost:8080/recommend', {
+        input: userInput,
       });
+      const recommendedFilms = response.data.results;
 
-      if (!response.ok) {
-        throw new Error('Sunucu yanıtı düzgün değil');
-      }
+      // Fetch posters for the recommended films
+      const filmsWithPosters = await Promise.all(
+        recommendedFilms.map(async (film) => {
+          const movieId = film.id;
+          const tmdbResponse = await axios.get(
+            `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=en-US`
+          );
+          const posterPath = tmdbResponse.data.poster_path;
+          const posterUrl = posterPath
+            ? `https://image.tmdb.org/t/p/w500${posterPath}`
+            : null;
 
-      const data = await response.json();
-      const moviesWithTMDBInfo = await Promise.all(
-        data.oneriler.map(async (movie) => {
-          const tmdbInfo = await fetchTMDBInfo(movie.baslik);
-          const keywords = await fetchKeywords(movie.id);
-          return { ...movie, ...tmdbInfo, keyword: keywords };
+          return {
+            ...film,
+            posterUrl,
+          };
         })
       );
-      setRecommendations(moviesWithTMDBInfo);
-    } catch (error) {
-      setError('Öneriler alınırken bir hata oluştu. Lütfen tekrar deneyin.');
-      console.error('Error fetching recommendations:', error);
-    } finally {
-      setLoading(false);
+
+      setRecommendations(filmsWithPosters);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to fetch recommendations. Please try again later.');
     }
   };
 
-  const fetchTMDBInfo = async (title) => {
+  const fetchLikedMovies = async (userSub) => {
     try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(title)}`
-      );
-
+      const response = await fetch(`http://localhost:5000/api/movies/liked/${userSub}`);
       if (!response.ok) {
-        throw new Error('TMDB sunucusu yanıt vermedi');
+        throw new Error("Beğenilen filmler alınamadı");
       }
-
+  
       const data = await response.json();
-      if (data.results && data.results.length > 0) {
-        return {
-          poster_path: data.results[0].poster_path,
-          tmdb_id: data.results[0].id,
-          ozet: data.results[0].overview,
-        };
-      }
+      const likedMoviesState = {};
+  
+      // Veriyi güncellerken, 'is_liked' değerini 1 => true, 0 => false olarak değiştiriyoruz.
+      data.forEach(movie => {
+        likedMoviesState[movie.movie_id] = movie.is_liked === 1;
+      });
+  
+      setLikedMovies(likedMoviesState);
+      console.log("Beğenilen Filmler State'i:", likedMoviesState);
+  
     } catch (error) {
-      console.error('Error fetching TMDB info:', error);
+      console.error("Error fetching liked movies:", error);
     }
-    return {};
   };
 
-  const fetchKeywords = async (tmdb_id) => {
-    if (!tmdb_id) return [];
+  const handleLike = async (movieId) => {
+    const isLiked = likedMovies[movieId] || false;
+    const newLikedMovies = { ...likedMovies, [movieId]: !isLiked };
+
     try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/movie/${tmdb_id}/keywords?api_key=${TMDB_API_KEY}`
-      );
+      const response = await fetch("http://localhost:5000/api/movies/like", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ movieId, userSub, isLiked: !isLiked })
+      });
 
-      if (!response.ok) {
-        throw new Error('TMDB sunucusu yanıt vermedi');
-      }
-
-      const data = await response.json();
-      return data.keywords.map((keyword) => keyword.name);
+      if (!response.ok) throw new Error("Failed to update like status");
+      setLikedMovies(newLikedMovies);
     } catch (error) {
-      console.error('Error fetching keywords:', error);
+      console.error(error);
     }
-    return [];
   };
 
-  const handleOpenModal = (movie) => {
-    setSelectedMovie(movie);
-  };
+    // Handle poster click
+    const handlePosterClick = (title) => {
+      const formattedTitle = title.replace(/\s+/g, '-');
+      window.open(`/movie/${formattedTitle}`, '_blank');
+    };
 
-  const handleCloseModal = () => {
-    setSelectedMovie(null);
-  };
+    useEffect(() => {
+      
+      // Eğer kullanıcı giriş yaptıysa ve kullanıcı bilgisi varsa
+      if (isAuthenticated && userSub) {
+        // Kullanıcının beğenilen filmleri veritabanından al
+        fetchLikedMovies(userSub);
+      } else {
+
+      }
+    }, [isAuthenticated, userSub]); // Bağımlılıkları isAuthenticated ve userSub'a göre güncelledik
+    
 
   return (
-    
-    <div className="app-container">
-      <div className="content-wrapper">
-        <h1 className="title">Film Öneri Keşfi</h1>
+    <div className="film-recommender-container">
+      <h1 className="recommendation-header">Film Recommendation System</h1>
+      <input
+        type="text"
+        placeholder="Enter a brief description..."
+        value={userInput}
+        onChange={handleInputChange}
+        className="input-field"
+      />
+      <br />
+      <button
+        onClick={getRecommendations}
+        className="recommend-button"
+      >
+        Get Recommendations
+      </button>
+      {error && <p className="error-message">{error}</p>}
+ 
 
-        <div className="input-section">
-          <input
-            type="text"
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            placeholder="Nasıl bir film izlemek istiyorsunuz?"
-            className="input-field"
-          />
-          <button 
-            onClick={getRecommendations} 
-            disabled={loading}
-            className={`submit-button ${loading ? 'loading' : ''}`}
-          >
-            {loading ? (
-              <span className="loading-spinner">
-                <svg className="animate-spin spinner-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="circle" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Yükleniyor...
-              </span>
-            ) : (
-              'Öneriler Al'
-            )}
-          </button>
-          {error && <p className="error-message">{error}</p>}
+
+
+      <div className="movie-list">
+  {/* API'den alınan veriler varsa */}
+  {recommendations.length > 0 && (
+    <div className="movie-posters">
+      {/* Önerilen filmleri listele */}
+      {recommendations.map((rec, index) => (
+        <div key={index} className="movie-item">
+          {/* Poster varsa göster */}
+          {rec.posterUrl && (
+            <img
+              src={rec.posterUrl}
+              alt={rec.title}
+              onClick={() => handlePosterClick(rec.title)} // Poster tıklama işlevi
+            />
+          )}
+          
+          {/* Beğenme butonu, giriş yapıldıysa göster */}
+          {isAuthenticated && (
+            <button className="like-button" onClick={() => handleLike(rec.id)}>
+              <FontAwesomeIcon 
+                icon={likedMovies[rec.id] ? solidHeart : regularHeart} 
+                style={{ color: likedMovies[rec.id] ? 'red' : 'gray', fontSize: '1.5rem' }} 
+              />
+            </button>
+          )}
+          
+          {/* Film başlığını göster */}
+          <h2>{rec.title}</h2>
         </div>
+      ))}
+    </div>
+  )}
+</div>
 
-        <div className="grid-container">
-          {recommendations.map((movie, index) => (
-            <div key={index} className="movie-card">
-              <div className="image-wrapper">
-                {movie.poster_path ? (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                    alt={movie.baslik}
-                    className="movie-poster"
-                  />
-                ) : (
-                  <div className="no-poster">Poster Yok</div>
-                )}
-              </div>
-              <div className="movie-info">
-                <h3 className="movie-title">{movie.baslik}</h3>
-                <div className="rating-section">
-                  <div className="rating">
-                    <svg className="rating-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 .587l3.668 7.568 8.328 1.207c.909.132 1.271 1.209.588 1.81l-6.039 5.785 1.416 8.268c.159.925-.818 1.63-1.636 1.168l-7.435-3.903-7.435 3.903c-.818.462-1.795-.243-1.636-1.168l1.416-8.268-6.039-5.785c-.683-.601-.321-1.678.588-1.81l8.328-1.207L12 .587z" />
-                    </svg>
-                    <span className="rating-value">{movie.deger} / 10</span>
-                  </div>
-                  <button onClick={() => handleOpenModal(movie)} className="detail-button">
-                    Detay
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
 
-        {selectedMovie && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h2 className="modal-title">{selectedMovie.baslik}</h2>
-              <p className="modal-description">{selectedMovie.ozet}</p>
-              <button onClick={handleCloseModal} className="close-button">Kapat</button>
-            </div>
-          </div>
-        )}
-      </div>
+
+
+
+
     </div>
   );
-}
+};
 
-
-
-export default withAuthenticationRequired(FilmOnerileri, {
-  onRedirecting: () => <Loading />,
-});
+export default FilmRecommender;

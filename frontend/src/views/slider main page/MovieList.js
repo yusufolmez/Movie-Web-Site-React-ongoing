@@ -38,7 +38,6 @@ const MovieList = ({ selectedGenreId }) => {
     } else {
       fetchMoviesByGenre(selectedGenreId);
     }
-
     // Sayfa değişiminde kaydırma işlemi
     if (movieListRef.current) {
       movieListRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -137,7 +136,6 @@ const MovieList = ({ selectedGenreId }) => {
       }
 
       const result = await response.json();
-      console.log("Film başarıyla beğenildi:", result);
 
       setLikedMovies(newLikedMovies); // Beğeni durumu güncelle
     } catch (error) {
@@ -158,7 +156,7 @@ const MovieList = ({ selectedGenreId }) => {
               onClick={() => handlePosterClick(movie.title)}
             />
             <div className='ttl-btn'>
-            <h2 className={`${theme === 'dark' ? 'text-light' : 'text-dark'}`}>{movie.title}</h2>
+            <h2>{movie.title}</h2>
             {/* Beğen Butonu */}
             {isAuthenticated && (
               <button 

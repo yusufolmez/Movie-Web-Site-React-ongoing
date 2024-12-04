@@ -3,16 +3,12 @@
   width: 100%; /* Varsayılan olarak tam genişlik */
   margin-right: auto;
   margin-left: auto;
-  padding-right: 15px;
-  padding-left: 15px;
   box-sizing: border-box; /* İçerik taşmasını önler */
 }
 
 /* Farklı ekran boyutları için maksimum genişlik */
 .container-fluid {
   width: 100%; /* Akıcı bir düzen için tam genişlik */
-  padding-right: 15px;
-  padding-left: 15px;
   box-sizing: border-box;
 }
 

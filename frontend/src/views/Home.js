@@ -1,7 +1,7 @@
 
 // Home.js veya ilgili bileşen
 import React, { useState } from 'react';
-import Slider from './slider main page/slider';
+import Slider from './slider main page/MainPage';
 
 const Home = () => {
   const [setSelectedGenre] = useState(null); // Seçilen kategoriyi tut

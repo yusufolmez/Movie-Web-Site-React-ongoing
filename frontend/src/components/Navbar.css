@@ -4,11 +4,12 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
-  background-color: #0E1826;  /* Koyu zemin */
+  background-color: transparent;  /* Koyu zemin */
   color: white;
   border-bottom: none;
   position: relative;
   flex-wrap: wrap;
+  z-index: 99;
 }
 
 /* Navbar Başlık ve Logo */
@@ -76,6 +77,7 @@
 /* Arama Çubuğu */
 .search-bar {
   margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .search-bar input {
@@ -100,15 +102,7 @@
   cursor: pointer;
 }
 
-/* FontAwesome Ok İkonu */
-.dropdown-arrow {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  font-size: 16px;
-  cursor: pointer;
-  color: white;
-}
+
 
 /* Dropdown Menü */
 .dropdown-menu {
@@ -116,10 +110,10 @@
   position: absolute;
   top: 50px;
   right: 0;
-  background-color: #495057;
+  background-color: #0E1826;
   color: white;
   border-radius: 0.25rem;
-  padding: 0.5rem;
+  padding: 0.6rem;
   text-align: left;
   min-width: 150px;
   z-index: 9999;
@@ -142,13 +136,17 @@
 /* Dropdown Öğeleri */
 .dropdown-link {
   display: block;
-  color: white;
+  color: #05AFF2;
   text-decoration: none;
-  padding: 0.5rem 0;
+  padding: 0.5rem 0.2rem;
+  border-bottom: 1px solid #034C8C;
+  cursor: pointer;
 }
 
 .dropdown-link:hover {
-  background-color: #343a40; /* Koyu arka plan hover rengi */
+  background-color: #0476D9; /* Koyu arka plan hover rengi */
+  color: #333;
+  border-radius: 5px;
 }
 
 .search-results {
