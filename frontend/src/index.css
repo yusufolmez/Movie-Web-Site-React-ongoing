@@ -426,3 +426,94 @@ body {
     width: 250px;
   }
 }
+
+/* Mevcut CSS'in sonuna ekleyin */
+
+.comments-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+}
+
+.comments-section h3 {
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.comments-section ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.comments-section li {
+  background-color: #2a2a2a;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.comments-section form {
+  margin-top: 20px;
+}
+
+.comments-section textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+.comments-section button {
+  background-color: #0476D9;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.comments-section button:hover {
+  background-color: #034C8C;
+}
+
+.movie-detail-container {
+  max-width: 800px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* Film bilgileri ile yorumlar arasındaki boşluk */
+}
+
+.movie-info, .movie-comments {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.movie-info h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #fff;
+  text-align: center;
+}
+
+.movie-info img {
+  width: 35%;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.movie-info p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #ddd;
+  margin-bottom: 15px;
+}
+

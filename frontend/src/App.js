@@ -7,7 +7,8 @@ import Footer from "./components/Footer";
 import Test from "./components/test";
 import Home from "./views/Home";
 import Profile from "./views/Profile/Profile";
-import MovieDetail from "./views/MovieDetail";
+import EditProfile from "./views/Profile/EditProfile";
+import MovieDetail from "./views/MovieDetail/MovieDetail";
 import FilmOnerileri from "./views/FilmOnerileri/FilmOnerileri";
 import PicksForU from "./views/picks_for_you/index";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/test" element={<Test />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/FilmOnerileri" element={<FilmOnerileri />} />
         <Route path="/movie/:title" element={<MovieDetail />} />
         <Route path="/PicksForUser" element={<PicksForU />} />
