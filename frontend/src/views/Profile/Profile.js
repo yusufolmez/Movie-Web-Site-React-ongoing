@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import Loading from "../../components/Loading";
 
@@ -12,7 +12,9 @@ const Profile = () => {
   const [otherUsers, setOtherUsers] = useState([]);
   const [friends, setFriends] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
-
+  const [topGenres, setTopGenres] = useState([]);
+  const [totalLikedMovies, setTotalLikedMovies] = useState(0); // Yeni state eklendi
+  const banner= require('../../assets/profile-banner.png');
   useEffect(() => {
     if (user) {
 
@@ -37,6 +39,7 @@ const Profile = () => {
 
       const data = await response.json();
       const likedMoviesIds = data.filter(movie => movie.is_liked === 1).map(movie => movie.movie_id);
+      setTotalLikedMovies(likedMoviesIds.length); // Güncellenen fetchLikedMovies fonksiyonu
       fetchMovieDetails(likedMoviesIds.slice(0, 5));
     } catch (error) {
       console.error("Error fetching liked movies:", error);
@@ -44,7 +47,7 @@ const Profile = () => {
   };
 
   const fetchMovieDetails = async (movieIds) => {
-    const apiKey = '1ac1c652640394393d245daab04c06b2'; // TMDB API anahtarınızı buraya ekleyin
+    const apiKey = '1ac1c652640394393d245daab04c06b2';
     try {
       const moviePromises = movieIds.map(id =>
         fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=tr-TR`)
@@ -53,6 +56,7 @@ const Profile = () => {
 
       const movieData = await Promise.all(moviePromises);
       setLikedMovies(movieData);
+      calculateTopGenres(movieData);
     } catch (error) {
       console.error("Error fetching movie details:", error);
     }
@@ -79,7 +83,10 @@ const Profile = () => {
     try {
       const response = await fetch(`http://localhost:5000/api/friends/${user.sub}`);
       const data = await response.json();
-      setFriends(data);
+      // Arkadaş listesini benzersiz hale getir
+      const uniqueFriends = Array.from(new Set(data.map(friend => friend.id)))
+        .map(id => data.find(friend => friend.id === id));
+      setFriends(uniqueFriends);
     } catch (error) {
       console.error('Arkadaşları getirme hatası:', error);
     }
@@ -98,6 +105,7 @@ const Profile = () => {
       setFriendRequests(enrichedRequests);
     } catch (error) {
       console.error('Arkadaşlık isteklerini getirme hatası:', error);
+
     }
   };
   
@@ -139,6 +147,22 @@ const Profile = () => {
     }
   };
 
+  const calculateTopGenres = useCallback((movies) => {
+    const genreCounts = {};
+    movies.forEach(movie => {
+      movie.genres.forEach(genre => {
+        genreCounts[genre.name] = (genreCounts[genre.name] || 0) + 1;
+      });
+    });
+
+    const sortedGenres = Object.entries(genreCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([genre]) => genre);
+
+    setTopGenres(sortedGenres);
+  }, []);
+
   if (!user) {
     return <Loading />;
   }
@@ -146,7 +170,7 @@ const Profile = () => {
   return (
     <div>
       <div className="banner">
-        <p>Bu bir banner bölümü</p>
+        <img src={banner}/>
       </div>
 
       <div className="profile-container">
@@ -157,16 +181,16 @@ const Profile = () => {
                 <img src={user.picture || "/default-profile.jpg"} alt="Profil" />
               </div>
               <div className="user-details">
-                <h2>{user.nickname}</h2>
-                <p>{user.name} hakkında kısa bir açıklama...</p>
+                <h2>{user.name}</h2>
+                <p>{user.nickname} hakkında kısa bir açıklama...</p>
                 <a href="/edit-profile" className="recommend-button">Profili Düzenle</a>
               </div>
             </div>
             <div className="user-stats">
               <h3>Profil İstatistikleri</h3>
-              <p>İzlenen Toplam Film:</p>
-              <p>Favori Tür:</p>
-              <p>Ortalama Puan:</p>
+              <p>İzlenen Toplam Film: {totalLikedMovies}</p> {/* Güncellenen profil istatistikleri */}
+              <p>Favori Tür: {topGenres.join(', ')}</p>
+              <p>Ortalama Puan: {/* Calculate and display average rating if available */}</p>
             </div>
             <div className="watchlist">
               <div className="div1">Beğenilen Filmler</div>
@@ -197,8 +221,8 @@ const Profile = () => {
                   <div key={request.id} className="friend-request">
                     <img src={request.picture || "/default-profile.jpg"} alt={request.name} />
                     <p>{request.name}</p>
-                    <button onClick={() => handleFriendRequest(request.id, request.user_sub, request.friend_sub, 'accepted')}>Kabul Et</button>
-                    <button onClick={() => handleFriendRequest(request.id, request.user_sub, request.friend_sub, 'rejected')}>Reddet</button>
+                    <button onClick={() => handleFriendRequest(request.id, request.user_sub, request.friend_sub, 'accepted')}>Onayla</button>
+                    <button onClick={() => handleFriendRequest(request.id, request.user_sub, request.friend_sub, 'rejected')}>Sil</button>
                   </div>
                 ))}
               </div>
@@ -207,25 +231,32 @@ const Profile = () => {
                 {friends.map((friend) => (
                   <div key={friend.id} className="friend-profile">
                     <img src={friend.picture || "/default-profile.jpg"} alt={friend.name} />
-                    <p>{friend.name}</p>
+                    <p>{friend.nickname}</p>
                   </div>
                 ))}
               </div>
             </div>
             <div className="other-users">
-              <h3>Diğer Kullanıcılar</h3>
+              <div className="other-user-profile">
+              
               {otherUsers.map((otherUser) => (
-                <div key={otherUser.id} className="other-user-profile">
-                  <Link to={`/profile/${otherUser.nickname}-profile`}>
-                    <img src={otherUser.picture || "/default-profile.jpg"} alt={otherUser.name} />
-                    <p>{otherUser.name}</p>
-                  </Link>
-                  <button onClick={() => addFriend(otherUser.id)} className="add-friend-btn">
+                <React.Fragment key={otherUser.id}>
+                  <img
+                    src={otherUser.picture || "/default-profile.jpg"}
+                    alt={otherUser.name}
+                  />
+                  <p>{otherUser.name}</p>
+                  <button
+                    onClick={() => addFriend(otherUser.id)}
+                    className="add-friend-btn"
+                  >
                     Arkadaş Ekle
                   </button>
-                </div>
+                </React.Fragment>
               ))}
+              </div>
             </div>
+
           </div>
         </div>
       </div>

@@ -33,14 +33,14 @@ const LikedMovies = () => {
   const getUserSub = () => {
     // URL'yi alıyoruz
     const pathname = window.location.pathname;
-    
-    // URL'den userSub'u almak için RegEx kullanıyoruz
-    const match = pathname.match(/^\/userslike\/(auth0%7C[\w-]+)-likedmovies$/);
-    
-    // Eğer eşleşme varsa, userSub'yu döndürüyoruz
+  
+    // URL'den userSub'u almak için daha genel bir RegEx kullanıyoruz
+    const match = pathname.match(/^\/userslike\/([^/]+)-likedmovies$/);
+  
+    // Eğer eşleşme varsa, userSub'u döndürüyoruz
     return match ? decodeURIComponent(match[1]) : null;
   };
-
+  
   const fetchLikedMovies = async (currentUserSub) => {
     console.log("Fetching liked movies for user:", currentUserSub);
     try {

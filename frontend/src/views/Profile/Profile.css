@@ -1,7 +1,8 @@
 /* Banner Bölümü */
-.banner {
+.banner img {
+  top: -60px;
   position: relative;
-  width: 100%;
+  width: 1903px;
   height: 200px;
   background-color: #333;
   color: white;
@@ -43,15 +44,64 @@
 
 .profile-right {
   width: 28%;
+  gap: 20px;
 }
 
-.user-info, .user-stats, .other-users {
-  border: 1px solid #ddd;
+.user-info {
+  border: 1px solid #0476D9;
   padding: 20px;
-  margin-bottom: 20px;
-  background-color: #5D60A6;
+  margin-bottom: 10px;
+  background-color: #0E1826;
   border-radius: 15px;
 }
+
+.other-users {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 60px 130px auto;
+  grid-auto-rows: 60px;
+  gap: 10px; /* Satırlar ve sütunlar arası boşluk */
+  background-color: #0E1826;
+  border: 1px solid #0476D9;
+  border-radius: 15px;
+}
+
+.other-user-profile {
+  display: contents; /* Grid içinde birden fazla hücreyi kullanır */
+}
+
+.other-user-profile img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Resimleri yuvarlak yapar */
+}
+
+.other-user-profile p {
+  margin: 0;
+  align-self: center;
+}
+
+.add-friend-btn {
+  justify-self: center; /* Butonu ortalar */
+  align-self: center;
+}
+
+
+.user-stats {  
+  display: grid;
+  grid-template-columns: 840px;
+  grid-template-rows: 25px 25px 25px;
+  gap: 10px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "."
+    ".";
+    padding: 20px;
+    background-color: #0E1826;
+    border: 1px solid #0476D9;
+    border-radius: 15px;
+}
+
 
 /*Watchlist */
 .watchlist {
@@ -150,6 +200,12 @@
   object-fit: cover;
 }
 
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .user-details h2 {
   margin: 0;
   font-size: 24px;
@@ -161,7 +217,7 @@
   color: #ccc;
 }
 
-.user-stats h3, .watchlist h3, .other-users h3 {
+.user-stats h3, .watchlist h3{
   margin-top: 0;
 }
 
@@ -174,25 +230,7 @@
   margin: 10px 0;
 }
 
-.other-user-profile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-}
 
-.other-user-profile img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 10px;
-}
-
-.other-user-profile p {
-  font-size: 16px;
-  margin: 0;
-}
 
 .logout-button {
   margin-top: 20px;
@@ -230,24 +268,6 @@
   margin-right: 10px;
 }
 
-/* Diğer kullanıcılar için yeni stiller */
-.other-users {
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.other-user-profile {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.other-user-profile img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
 
 .add-friend-btn {
   margin-left: auto;
@@ -279,20 +299,24 @@
 
 .friends-and-requests {
   margin-bottom: 20px;
-  background-color: #013A40;
-  border: 1px solid #ddd;
+  background-color: transparent;
+  border: 1px solid #0476D9;
   border-radius: 15px;
-  padding: 20px;
+  padding: 8px;
 }
 
 .friend-requests, .friends-list {
+  
   margin-bottom: 20px;
 }
 
 .friend-request, .friend-profile {
-  display: flex;
+  display: grid;
+  grid-template-columns: 60px 130px 60px 60px; 
   align-items: center;
-  margin-bottom: 10px;
+  grid-auto-rows: 60px;
+  background-color: #0E1826;
+  border-radius: 15px;
 }
 
 .friend-request img, .friend-profile img {
@@ -302,10 +326,16 @@
   margin-right: 10px;
 }
 
+.friend-request p, .friend-profile p {
+  margin: 0;
+  align-self: center;
+}
+
 .friend-request button {
-  margin-left: 10px;
-  padding: 5px 10px;
+  margin: 5px;
+  padding: 5px;
   background-color: #0476D9;
+  max-height: 25px;
   color: white;
   border: none;
   border-radius: 5px;
@@ -327,24 +357,6 @@
 
 /* Arkadaşlar listesi için yeni stiller */
 
-/* Diğer kullanıcılar için yeni stiller */
-.other-users {
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.other-user-profile {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.other-user-profile img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
 
 .add-friend-btn {
   margin-left: auto;

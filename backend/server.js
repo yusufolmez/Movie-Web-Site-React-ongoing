@@ -294,11 +294,16 @@ app.get('/api/friends/:userSub', async (req, res) => {
   const userSub = req.params.userSub;
 
   const query = `
-    SELECT * FROM user_friends
+    SELECT DISTINCT
+      CASE
+        WHEN user_sub = ? THEN friend_sub
+        ELSE user_sub
+      END AS friend_sub
+    FROM user_friends
     WHERE (user_sub = ? OR friend_sub = ?) AND status = 'accepted';
   `;
 
-  db.query(query, [userSub, userSub], async (err, results) => {
+  db.query(query, [userSub, userSub, userSub], async (err, results) => {
     if (err) {
       console.error('Arkadaş listesi getirme hatası: ', err);
       return res.status(500).send('Bir hata oluştu');
@@ -307,17 +312,17 @@ app.get('/api/friends/:userSub', async (req, res) => {
     try {
       const token = await getManagementApiToken();
       const enrichedResults = await Promise.all(results.map(async (friend) => {
-        const friendSub = friend.user_sub === userSub ? friend.friend_sub : friend.user_sub;
-        const userResponse = await fetch(`${AUTH0_AUDIENCE}users/${friendSub}`, {
+        const userResponse = await fetch(`${AUTH0_AUDIENCE}users/${friend.friend_sub}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
         const userData = await userResponse.json();
         return {
-          ...friend,
+          id: friend.friend_sub,
           name: userData.name,
-          picture: userData.picture
+          picture: userData.picture,
+          nickname: userData.nickname
         };
       }));
 
@@ -367,6 +372,41 @@ app.get('/api/friend-requests/:userSub', async (req, res) => {
       res.status(500).json({ error: 'Kullanıcı bilgilerini getirme hatası' });
     }
   });
+});
+
+// Kullanıcı bilgilerini userSub üzerinden getirme API'si
+app.get('/api/user-info/:userSub', async (req, res) => {
+  const userSub = req.params.userSub;
+
+  try {
+    // Auth0 Management API Token al
+    const token = await getManagementApiToken();
+
+    // Auth0 Management API'ye kullanıcı bilgisi için istek yap
+    const userResponse = await fetch(`${AUTH0_AUDIENCE}users/${userSub}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!userResponse.ok) {
+      return res.status(userResponse.status).json({ error: 'Kullanıcı bilgileri alınamadı' });
+    }
+
+    const userData = await userResponse.json();
+
+    // Kullanıcı bilgilerini döndür
+    res.status(200).json({
+      id: userData.user_id,
+      name: userData.name,
+      picture: userData.picture,
+      email: userData.email,
+      nickname: userData.nickname
+    });
+  } catch (error) {
+    console.error('Kullanıcı bilgilerini getirme hatası:', error);
+    res.status(500).json({ error: 'Kullanıcı bilgilerini getirme sırasında bir hata oluştu' });
+  }
 });
 
 

@@ -62,7 +62,6 @@ const MainPage = () => {
       });
   
       setLikedMovies(likedMoviesState);
-      console.log("Beğenilen Filmler State'i:", likedMoviesState);
   
     } catch (error) {
       console.error("Error fetching liked movies:", error);
