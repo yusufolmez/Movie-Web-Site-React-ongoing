@@ -238,13 +238,13 @@ const Profile = () => {
             </div>
             <div className="other-users">
               <div className="other-user-profile">
-              
+
               {otherUsers.map((otherUser) => (
                 <React.Fragment key={otherUser.id}>
-                  <img
-                    src={otherUser.picture || "/default-profile.jpg"}
-                    alt={otherUser.name}
-                  />
+                  <Link to={`/profiles/${otherUser.nickname}-profile`}>
+                    <img src={otherUser.picture || "/default-profile.jpg"} alt={otherUser.name} />
+
+                  </Link>
                   <p>{otherUser.name}</p>
                   <button
                     onClick={() => addFriend(otherUser.id)}

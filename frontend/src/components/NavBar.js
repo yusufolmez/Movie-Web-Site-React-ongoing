@@ -149,13 +149,7 @@ const NavBar = () => {
                 Anasayfa
               </a>
             </li>
-            {isAuthenticated && (
-              <li>
-                <a href="/external-api" className="nav-link">
-                  Dış API
-                </a>
-              </li>
-            )}
+
             <li>
               <a href="/PicksForUser" className="nav-link">
                 Our Picks For You
