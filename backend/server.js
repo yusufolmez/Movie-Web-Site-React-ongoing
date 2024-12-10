@@ -230,7 +230,8 @@ app.get('/api/users', async (req, res) => {
     const simplifiedUsers = users.map(user => ({
       id: user.user_id,
       name: user.name,
-      picture: user.picture
+      picture: user.picture,
+      nickname: user.nickname
     }));
 
     res.json(simplifiedUsers);
@@ -430,6 +431,38 @@ app.put('/api/update-user/:userSub', async (req, res) => {
     res.status(500).json({ error: error.message || 'Kullanıcı bilgilerini güncelleme hatası' });
   }
 });
+
+// Kullanıcı bilgilerini nickname üzerinden getirme API'si
+app.get('/api/user/by-nickname/:nickname', async (req, res) => {
+  const nickname = req.params.nickname;
+  try {
+    const token = await getManagementApiToken();
+    const response = await fetch(`${AUTH0_AUDIENCE}users`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Auth0 API yanıt vermedi');
+    }
+
+    const users = await response.json();
+    const user = users.find(u => u.nickname === nickname);
+
+    if (!user) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Kullanıcı profili getirme hatası:', error);
+    res.status(500).json({ error: 'Kullanıcı profili alınamadı' });
+  }
+});
+
 
 // Auth0 Management API için token alma fonksiyonu
 async function getManagementApiToken() {

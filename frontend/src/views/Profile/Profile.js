@@ -1,39 +1,63 @@
 import React, { useState, useEffect } from "react";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
-import Highlight from "../../components/Highlight";
 import Loading from "../../components/Loading";
+
 import './Profile.css';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
-  const { user, logout, getAccessTokenSilently } = useAuth0();
-  const [watchlist, setWatchlist] = useState([]);
-  const [activityHistory, setActivityHistory] = useState([]);
-  const [userStats, setUserStats] = useState({
-    totalMoviesWatched: 0,
-    favoriteGenre: "",
-    averageRating: 0
-  });
+  const { user, isAuthenticated, loginWithRedirect, logout, getAccessTokenSilently } = useAuth0();
+  const userSub = user?.sub;
+  const [likedMovies, setLikedMovies] = useState([]);
   const [otherUsers, setOtherUsers] = useState([]);
   const [friends, setFriends] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
 
   useEffect(() => {
     if (user) {
-      // Kullanıcı verilerini burada çekin
-      setWatchlist(["Film 1", "Film 2", "Film 3"]);
-      setActivityHistory(["Film 1 Beğenildi", "Film 2 İzlendi", "Film 3 Paylaşıldı"]);
-      setUserStats({
-        totalMoviesWatched: 50,
-        favoriteGenre: "Aksiyon",
-        averageRating: 4.2
-      });
 
       // Diğer kullanıcıları, arkadaşları ve arkadaşlık isteklerini getir
       fetchOtherUsers();
       fetchFriends();
       fetchFriendRequests();
     }
-  }, [user]);
+    if (isAuthenticated && userSub) {
+      // Kullanıcı giriş yapmışsa, beğenilen filmleri veritabanından alalım
+      fetchLikedMovies(userSub);
+    }
+  }, [user, isAuthenticated, userSub]);
+
+
+  const fetchLikedMovies = async (userSub) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/movies/liked/${userSub}`);
+      if (!response.ok) {
+        throw new Error("Beğenilen filmler alınamadı");
+      }
+
+      const data = await response.json();
+      const likedMoviesIds = data.filter(movie => movie.is_liked === 1).map(movie => movie.movie_id);
+      fetchMovieDetails(likedMoviesIds.slice(0, 5));
+    } catch (error) {
+      console.error("Error fetching liked movies:", error);
+    }
+  };
+
+  const fetchMovieDetails = async (movieIds) => {
+    const apiKey = '1ac1c652640394393d245daab04c06b2'; // TMDB API anahtarınızı buraya ekleyin
+    try {
+      const moviePromises = movieIds.map(id =>
+        fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=tr-TR`)
+          .then(res => res.json())
+      );
+
+      const movieData = await Promise.all(moviePromises);
+      setLikedMovies(movieData);
+    } catch (error) {
+      console.error("Error fetching movie details:", error);
+    }
+  };
+
 
   const fetchOtherUsers = async () => {
     try {
@@ -49,6 +73,7 @@ const Profile = () => {
       console.error('Diğer kullanıcıları getirme hatası:', error);
     }
   };
+
 
   const fetchFriends = async () => {
     try {
@@ -139,17 +164,28 @@ const Profile = () => {
             </div>
             <div className="user-stats">
               <h3>Profil İstatistikleri</h3>
-              <p>İzlenen Toplam Film: {userStats.totalMoviesWatched}</p>
-              <p>Favori Tür: {userStats.favoriteGenre}</p>
-              <p>Ortalama Puan: {userStats.averageRating}</p>
+              <p>İzlenen Toplam Film:</p>
+              <p>Favori Tür:</p>
+              <p>Ortalama Puan:</p>
             </div>
             <div className="watchlist">
-              <h3>İzleme Listesi</h3>
-              <ul>
-                {watchlist.map((movie, index) => (
-                  <li key={index}>{movie}</li>
-                ))}
-              </ul>
+              <div className="div1">Beğenilen Filmler</div>
+              <div className="div2">
+                <div className="movie-postersx">
+                  {likedMovies.map(movie => (
+                    <div key={movie.id}>
+                      <img
+                        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                        alt={movie.title}
+                      />
+                      <h2>{movie.title}</h2>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="div3">
+                <Link to={`/userslike/${user.sub}-likedmovies`} className="link ra">More...</Link>
+              </div>
             </div>
           </div>
           <div className="profile-right">
@@ -180,8 +216,10 @@ const Profile = () => {
               <h3>Diğer Kullanıcılar</h3>
               {otherUsers.map((otherUser) => (
                 <div key={otherUser.id} className="other-user-profile">
-                  <img src={otherUser.picture || "/default-profile.jpg"} alt={otherUser.name} />
-                  <p>{otherUser.name}</p>
+                  <Link to={`/profile/${otherUser.nickname}-profile`}>
+                    <img src={otherUser.picture || "/default-profile.jpg"} alt={otherUser.name} />
+                    <p>{otherUser.name}</p>
+                  </Link>
                   <button onClick={() => addFriend(otherUser.id)} className="add-friend-btn">
                     Arkadaş Ekle
                   </button>
@@ -198,3 +236,4 @@ const Profile = () => {
 export default withAuthenticationRequired(Profile, {
   onRedirecting: () => <Loading />,
 });
+
