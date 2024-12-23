@@ -1,9 +1,10 @@
 import React from "react";
-import loading from "../assets/loading.svg";
 
 const Loading = () => (
-  <div className="spinner">
-    <img src={loading} alt="Loading" />
+  <div className="loading-wrapper">
+    <div className="bar one"></div>
+    <div className="bar two"></div>
+    <div className="bar three"></div>
   </div>
 );
 

@@ -12,6 +12,62 @@
   box-sizing: border-box;
 }
 
+.loading-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loading-wrapper.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.bar {
+  display: block;
+  height: 36px;
+  width: 10px;
+  background: #ffffff;
+  margin-right: 24px;
+  animation: scale 1600ms ease-in-out infinite; /* Sonsuz animasyon */
+  transform-origin: 50% 50%;
+  box-shadow: 2px 2px 2px #3ff9dc;
+}
+
+.bar.one {
+  animation-delay: 100ms;
+}
+
+.bar.two {
+  animation-delay: 300ms;
+}
+
+.bar.three {
+  animation-delay: 500ms;
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5); /* Daha büyük bir ölçek */
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
 @media (min-width: 576px) {
   .container {
     max-width: 540px;
